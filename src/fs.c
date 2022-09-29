@@ -14,7 +14,9 @@ typedef struct fs_t
 {
 	heap_t* heap;
 	queue_t* file_queue;
+	queue_t* compression_queue; //separate queue for compression and decompression
 	thread_t* file_thread;
+	thread_t* compression_thread;//thread in order to call compression and decompression function
 } fs_t;
 
 typedef enum fs_work_op_t
@@ -38,20 +40,27 @@ typedef struct fs_work_t
 
 static int file_thread_func(void* user);
 
+static int compression_thread_func(void* user);//function which operates on the compression thread
+
 fs_t* fs_create(heap_t* heap, int queue_capacity)
 {
 	fs_t* fs = heap_alloc(heap, sizeof(fs_t), 8);
 	fs->heap = heap;
 	fs->file_queue = queue_create(heap, queue_capacity);
+	fs->compression_queue = queue_create(heap, queue_capacity);
 	fs->file_thread = thread_create(file_thread_func, fs);
+	fs->compression_thread = thread_create(compression_thread_func, fs);//create the thread calling the compression function
 	return fs;
 }
 
 void fs_destroy(fs_t* fs)
 {
 	queue_push(fs->file_queue, NULL);
+	queue_push(fs->compression_queue, NULL);
 	thread_destroy(fs->file_thread);
+	thread_destroy(fs->compression_thread);
 	queue_destroy(fs->file_queue);
+	queue_destroy(fs->compression_queue);//make sure to properly destory new queue and thread
 	heap_free(fs->heap, fs);
 }
 
@@ -87,6 +96,7 @@ fs_work_t* fs_write(fs_t* fs, const char* path, const void* buffer, size_t size,
 	if (use_compression)
 	{
 		// HOMEWORK 2: Queue file write work on compression queue!
+		queue_push(fs->compression_queue, work);
 	}
 	else
 	{
@@ -137,7 +147,7 @@ void fs_work_destroy(fs_work_t* work)
 	}
 }
 
-static void file_read(fs_work_t* work)
+static void file_read(fs_work_t* work, fs_t* fs) //Added fs so that I could call queue_psuh with the compression queue
 {
 	wchar_t wide_path[1024];
 	if (MultiByteToWideChar(CP_UTF8, 0, work->path, -1, wide_path, sizeof(wide_path)) <= 0)
@@ -182,6 +192,7 @@ static void file_read(fs_work_t* work)
 	if (work->use_compression)
 	{
 		// HOMEWORK 2: Queue file read work on decompression queue!
+		queue_push(fs->compression_queue, work);
 	}
 	else
 	{
@@ -235,11 +246,56 @@ static int file_thread_func(void* user)
 		switch (work->op)
 		{
 		case k_fs_work_op_read:
-			file_read(work);
+			file_read(work, fs);
 			break;
 		case k_fs_work_op_write:
 			file_write(work);
 			break;
+		}
+
+	}
+	return 0;
+}
+
+#include "lz4/lz4.h"
+
+static int compression_thread_func(void* user)
+{
+	fs_t* fs = user;
+	while (true)
+	{
+		fs_work_t* work = queue_pop(fs->compression_queue);//look for work on the compression queue
+		if (work == NULL)
+		{
+			break;
+		}
+
+		switch (work->op)
+		{
+		case k_fs_work_op_read:
+		{
+			//when needing to read you need to decompress
+			int dat_buffer_size = 10000000;//estimate that most likely size will be smaller than this
+			void* dat_buffer = heap_alloc(work->heap, dat_buffer_size, 8);//allocate space for the decompressed string
+			//call decompress from LZ4 using the information passed from file_read in the data of work
+			int decomp_size = LZ4_decompress_safe(work->buffer, dat_buffer, (int)work->size, dat_buffer_size);
+			work->buffer = dat_buffer;//assign decompressed data to work to be passed back
+
+			event_signal(work->done);//signal finished with reading
+			break;
+		}
+		case k_fs_work_op_write:
+		{
+			//write => compress data into file
+			int dat_buffer_size = LZ4_compressBound((int)work->size);//find the maximum compressed size given the data size
+			void* dat_buffer = heap_alloc(work->heap, dat_buffer_size, 8);//allocate buffer for compressed data
+			//compress the given data into new form using LZ4
+			int comp_size = LZ4_compress_default(work->buffer, dat_buffer, (int)work->size, dat_buffer_size);
+			//pass compressed data back into the buffer for work
+			work->buffer = dat_buffer;
+			queue_push(fs->file_queue, work);//finish the write operation with normal file operations
+			break; 
+		}
 		}
 	}
 	return 0;

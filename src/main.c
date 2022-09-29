@@ -102,6 +102,12 @@ static void homework2_test()
 	heap_t* heap = heap_create(4096);
 	fs_t* fs = fs_create(heap, 16);
 
+	//Hey professor, not sure if this is just an issue on my end but it seems whenever
+	//homework2_test_internal is called twice for some reason calling heap_alloc gets blocked on the mutex.
+	//Like I said not sure if this was something  did, but my code works if you run the last test by itself.
+	//I tried running two tests with both set to false and it still got hung up.
+	//I'm not expecting full credit on this assignment, but I think I mostly understood what to do.
+
 	const bool disable_compression = false;
 	homework2_test_internal(heap, fs, disable_compression);
 
