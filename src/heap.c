@@ -1,15 +1,14 @@
 #include "heap.h"
 
 #include "debug.h"
+#include "mutex.h"
 #include "tlsf/tlsf.h"
 
 #include <stddef.h>
 #include <stdio.h>
 
-
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-#include <dbghelp.h>
 
 typedef struct arena_t
 {
@@ -17,26 +16,13 @@ typedef struct arena_t
 	struct arena_t* next;
 } arena_t;
 
-
-//Structure to track memory accesses and look out for leaks
-typedef struct mem_leak_tracker_t
-{
-	void* address; //address of memory access
-	int free_state; //whether or not the memory at the address is currently freed
-	size_t block_size; //size of memory being used at address
-	void* call_stack [64]; //call stack from where memory was initially allocated
-	int call_stack_size; //number of items on call stack
-
-} mem_leak_tracker_t;
-
 typedef struct heap_t
 {
 	tlsf_t tlsf;
 	size_t grow_increment;
 	arena_t* arena;
-	mem_leak_tracker_t leak_tracker_list[64];
+	mutex_t* mutex;
 } heap_t;
-
 
 heap_t* heap_create(size_t grow_increment)
 {
@@ -50,6 +36,7 @@ heap_t* heap_create(size_t grow_increment)
 		return NULL;
 	}
 
+	heap->mutex = mutex_create();
 	heap->grow_increment = grow_increment;
 	heap->tlsf = tlsf_create(heap + 1);
 	heap->arena = NULL;
@@ -59,6 +46,8 @@ heap_t* heap_create(size_t grow_increment)
 
 void* heap_alloc(heap_t* heap, size_t size, size_t alignment)
 {
+	mutex_lock(heap->mutex);
+
 	void* address = tlsf_memalign(heap->tlsf, alignment, size);
 	if (!address)
 	{
@@ -83,72 +72,21 @@ void* heap_alloc(heap_t* heap, size_t size, size_t alignment)
 
 		address = tlsf_memalign(heap->tlsf, alignment, size);
 	}
-	mem_leak_tracker_t leak_tracker = { .address = address, .block_size = size, .free_state = 1, };
-	unsigned short frames = CaptureStackBackTrace(1, 63, leak_tracker.call_stack, NULL);
-	leak_tracker.call_stack_size = frames;
 
-	for (int i = 0; i < 64; i++) {
-		if (heap->leak_tracker_list[i].free_state == 1) {
-			continue;
-		}
-		else {
-			heap->leak_tracker_list[i] = leak_tracker;
-			break;
-		}
-	}
+	mutex_unlock(heap->mutex);
 
 	return address;
 }
 
 void heap_free(heap_t* heap, void* address)
 {
+	mutex_lock(heap->mutex);
 	tlsf_free(heap->tlsf, address);
-	for (int i = 0; i < 64; i++) {
-		if (heap->leak_tracker_list[i].address == address) {
-			heap->leak_tracker_list[i].block_size = 0;
-			heap->leak_tracker_list[i].free_state = 0;
-			return;
-		}
-	}
+	mutex_unlock(heap->mutex);
 }
 
 void heap_destroy(heap_t* heap)
 {
-	for (int i = 0; i < 64; i++) {
-		if (heap->leak_tracker_list[i].free_state == 1) {
-
-			debug_print(
-				k_print_error,
-				"Memory leak of size %d bytes with callstack:\n",
-				heap->leak_tracker_list[i].block_size);
-
-			SymInitialize(GetCurrentProcess(), NULL, TRUE);
-			
-			SYMBOL_INFO* symbol = (SYMBOL_INFO*)calloc(sizeof(SYMBOL_INFO) + 256 * sizeof(char), 1);
-			symbol->MaxNameLen = 255;
-			symbol->SizeOfStruct = sizeof(SYMBOL_INFO);
-
-			for (int j = 0; j < (heap->leak_tracker_list[i].call_stack_size - 6); j++) {
-				if (SymFromAddr(GetCurrentProcess(), (DWORD64)(heap->leak_tracker_list[i].call_stack[j]), 0, symbol)) {
-					debug_print(
-						k_print_error,
-						"[%d] %s\n",
-						j, symbol->Name);
-				}
-				else {
-					debug_print(
-						k_print_error,
-						"Broken");
-					DWORD lasterror = GetLastError();
-					printf("\n    Error! - Error code %d\n", lasterror);
-				}
-				
-			}
-			free(symbol);
-			SymCleanup(GetCurrentProcess());
-		}
-	}
-
 	tlsf_destroy(heap->tlsf);
 
 	arena_t* arena = heap->arena;
@@ -158,6 +96,8 @@ void heap_destroy(heap_t* heap)
 		VirtualFree(arena, 0, MEM_RELEASE);
 		arena = next;
 	}
+
+	mutex_destroy(heap->mutex);
 
 	VirtualFree(heap, 0, MEM_RELEASE);
 }
