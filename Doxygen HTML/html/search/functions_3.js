@@ -1,0 +1,13 @@
+var searchData=
+[
+  ['fs_5fcreate_0',['fs_create',['../fs_8c.html#a6660146bceb6d225308eb9a22b23a4b8',1,'fs_create(heap_t *heap, int queue_capacity):&#160;fs.c'],['../fs_8h.html#a6660146bceb6d225308eb9a22b23a4b8',1,'fs_create(heap_t *heap, int queue_capacity):&#160;fs.c']]],
+  ['fs_5fdestroy_1',['fs_destroy',['../fs_8c.html#a3bf5ea6ccaf1b290cf10e7634f09915e',1,'fs_destroy(fs_t *fs):&#160;fs.c'],['../fs_8h.html#a3bf5ea6ccaf1b290cf10e7634f09915e',1,'fs_destroy(fs_t *fs):&#160;fs.c']]],
+  ['fs_5fread_2',['fs_read',['../fs_8c.html#a57c626d65339015dc277a066675b8251',1,'fs_read(fs_t *fs, const char *path, heap_t *heap, bool null_terminate, bool use_compression):&#160;fs.c'],['../fs_8h.html#a57c626d65339015dc277a066675b8251',1,'fs_read(fs_t *fs, const char *path, heap_t *heap, bool null_terminate, bool use_compression):&#160;fs.c']]],
+  ['fs_5fwork_5fdestroy_3',['fs_work_destroy',['../fs_8c.html#ab71ac98d9baeb9920ca9be307470e7e3',1,'fs_work_destroy(fs_work_t *work):&#160;fs.c'],['../fs_8h.html#ab71ac98d9baeb9920ca9be307470e7e3',1,'fs_work_destroy(fs_work_t *work):&#160;fs.c']]],
+  ['fs_5fwork_5fget_5fbuffer_4',['fs_work_get_buffer',['../fs_8c.html#a530b7b3cfdc1c278ef3320cb2fe564e8',1,'fs_work_get_buffer(fs_work_t *work):&#160;fs.c'],['../fs_8h.html#a530b7b3cfdc1c278ef3320cb2fe564e8',1,'fs_work_get_buffer(fs_work_t *work):&#160;fs.c']]],
+  ['fs_5fwork_5fget_5fresult_5',['fs_work_get_result',['../fs_8c.html#ac1c91ab3c2d8a7195c6a3a22fb627a95',1,'fs_work_get_result(fs_work_t *work):&#160;fs.c'],['../fs_8h.html#ac1c91ab3c2d8a7195c6a3a22fb627a95',1,'fs_work_get_result(fs_work_t *work):&#160;fs.c']]],
+  ['fs_5fwork_5fget_5fsize_6',['fs_work_get_size',['../fs_8c.html#a322e2a93ab0aa31fa467af99c816133a',1,'fs_work_get_size(fs_work_t *work):&#160;fs.c'],['../fs_8h.html#a322e2a93ab0aa31fa467af99c816133a',1,'fs_work_get_size(fs_work_t *work):&#160;fs.c']]],
+  ['fs_5fwork_5fis_5fdone_7',['fs_work_is_done',['../fs_8c.html#abf12a9c5e26788f5574a6d0a5933f678',1,'fs_work_is_done(fs_work_t *work):&#160;fs.c'],['../fs_8h.html#abf12a9c5e26788f5574a6d0a5933f678',1,'fs_work_is_done(fs_work_t *work):&#160;fs.c']]],
+  ['fs_5fwork_5fwait_8',['fs_work_wait',['../fs_8c.html#abdaac562f5e7097632e9d2ed77e0fa87',1,'fs_work_wait(fs_work_t *work):&#160;fs.c'],['../fs_8h.html#abdaac562f5e7097632e9d2ed77e0fa87',1,'fs_work_wait(fs_work_t *work):&#160;fs.c']]],
+  ['fs_5fwrite_9',['fs_write',['../fs_8c.html#a13c87f55b5e8c939ef0f8fef43f808c3',1,'fs_write(fs_t *fs, const char *path, const void *buffer, size_t size, bool use_compression):&#160;fs.c'],['../fs_8h.html#a13c87f55b5e8c939ef0f8fef43f808c3',1,'fs_write(fs_t *fs, const char *path, const void *buffer, size_t size, bool use_compression):&#160;fs.c']]]
+];

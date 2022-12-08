@@ -1,0 +1,25 @@
+var searchData=
+[
+  ['call_5fstack_0',['call_stack',['../structmem__leak__tracker__t.html#a39d88e5838895c265c177d16162aa32c',1,'mem_leak_tracker_t']]],
+  ['call_5fstack_5fsize_1',['call_stack_size',['../structmem__leak__tracker__t.html#ad15f370d397ff55dc3f9685ec356feab',1,'mem_leak_tracker_t']]],
+  ['camera_5fcomponent_5ft_2',['camera_component_t',['../structcamera__component__t.html',1,'camera_component_t'],['../simple__game_8c.html#afd72dff4e5301ac60e15115fc14f3bef',1,'camera_component_t():&#160;simple_game.c']]],
+  ['camera_5fent_3',['camera_ent',['../structsimple__game__t.html#a4f25d4bc6df41baa10419ebb4e61f153',1,'simple_game_t']]],
+  ['camera_5ftype_4',['camera_type',['../structsimple__game__t.html#a8c337d1da64f171ba0b5fffdf298df5b',1,'simple_game_t']]],
+  ['capacity_5',['capacity',['../structqueue__t.html#a3df5ecf5f16262e06c904528f469404f',1,'queue_t']]],
+  ['cmd_5fbuffer_6',['cmd_buffer',['../structgpu__frame__t.html#a50a709a785d45528e3af6abd797855f4',1,'gpu_frame_t']]],
+  ['cmd_5fpool_7',['cmd_pool',['../structgpu__t.html#a6fcf2c34f982f6a6a8f3d97eaf42cf32',1,'gpu_t']]],
+  ['command_5ftype_5ft_8',['command_type_t',['../render_8c.html#ac27b6f4710923c6689834e86aea228ac',1,'command_type_t():&#160;render.c'],['../render_8c.html#af35bd8845f49d967028c2876e122a547',1,'command_type_t():&#160;render.c']]],
+  ['component_5fmask_9',['component_mask',['../structecs__query__t.html#ad0929f8090fa3e8099d4e37ea226e6b1',1,'ecs_query_t']]],
+  ['component_5fmasks_10',['component_masks',['../structecs__t.html#a0041932064dc1c657c5732b1df9ae5e6',1,'ecs_t']]],
+  ['component_5ftype_5fnames_11',['component_type_names',['../structecs__t.html#ab617c01d9236f4adf98938587c701d5e',1,'ecs_t']]],
+  ['component_5ftype_5fsizes_12',['component_type_sizes',['../structecs__t.html#a29b09ba7ce5264fb482e2d69867abc48',1,'ecs_t']]],
+  ['components_13',['components',['../structecs__t.html#aa9dfe316b25e33c00f1e2e7c8b7432de',1,'ecs_t']]],
+  ['compression_5fqueue_14',['compression_queue',['../structfs__t.html#a73329d49736ce2ba44e0913b93245813',1,'fs_t']]],
+  ['compression_5fthread_15',['compression_thread',['../structfs__t.html#a32478dbbd1f0337fcb883bf17fddb092',1,'fs_t']]],
+  ['connection_5ft_16',['connection_t',['../structconnection__t.html',1,'connection_t'],['../net_8c.html#a7e47fb8ddbf99c68fdc57486974fa505',1,'connection_t():&#160;net.c']]],
+  ['connections_17',['connections',['../structnet__t.html#abbd435728aa20113d4fcc2a8a5c9c755',1,'net_t']]],
+  ['counter_18',['counter',['../structthread__data__t.html#a43bea3b36c541efd8230e42ada41e53f',1,'thread_data_t']]],
+  ['cube_5fmesh_19',['cube_mesh',['../structsimple__game__t.html#a40e3e9a50cfabed7d5036bb4f96baedd',1,'simple_game_t']]],
+  ['cube_5fshader_20',['cube_shader',['../structsimple__game__t.html#a8f44c53e59d0f6636a4013e649e2bc94',1,'simple_game_t']]],
+  ['current_5fticks_21',['current_ticks',['../structtimer__object__t.html#a4fb18e74acb4e6026ce6700ac34d8e32',1,'timer_object_t']]]
+];
