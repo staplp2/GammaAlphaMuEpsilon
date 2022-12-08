@@ -1,10 +1,9 @@
 #pragma once
 
-// Quaternion support.
 
 #include "vec3f.h"
 
-// Quaternion object.
+/// Quaternion object.
 typedef struct quatf_t
 {
 	union
@@ -14,13 +13,16 @@ typedef struct quatf_t
 	};
 } quatf_t;
 
-// Creates a quaternion with no rotation.
+/// Creates a quaternion with no rotation.
 __forceinline quatf_t quatf_identity()
 {
 	return (quatf_t){ .x = 0.0f, .y = 0.0f, .z = 0.0f, .w = 1.0f };
 }
 
-// Combines the rotation of two quaternions -- a and b -- into a new quaternion.
+/// Combines the rotation of two quaternions -- a and b -- into a new quaternion.
+/// @param a Quaternion 1 for combine operation.
+/// @param b Quaternion 2 for combine operation.
+/// @return The combined quaternion from multiplication of quaternions a and b.
 __forceinline quatf_t quatf_mul(quatf_t a, quatf_t b)
 {
 	quatf_t result;
@@ -34,7 +36,9 @@ __forceinline quatf_t quatf_mul(quatf_t a, quatf_t b)
 	return result;
 }
 
-// Computes the inverse of a normalized quaternion.
+/// Computes the inverse of a normalized quaternion.
+/// @param q Quaternion for inverse operation to be used upon.
+/// @return Inverse of the given quaternion q.
 __forceinline quatf_t quatf_conjugate(quatf_t q)
 {
 	quatf_t result;
@@ -43,16 +47,22 @@ __forceinline quatf_t quatf_conjugate(quatf_t q)
 	return result;
 }
 
-// Rotates a vector by a quaterion.
-// Returns the resulting vector.
+/// Rotates a vector by a quaterion.
+/// @param q Quaternion for rotation operation to be used upon.
+/// @param v Vector for rotation operation to be used upon.
+/// @return the resulting vector.
 __forceinline vec3f_t quatf_rotate_vec(quatf_t q, vec3f_t v)
 {
 	vec3f_t t = vec3f_scale(vec3f_cross(q.v3, v), 2.0f);
 	return vec3f_add(v, vec3f_add(vec3f_scale(t, q.w), vec3f_cross(q.v3, t)));
 }
 
-// Converts a quaternion to representation with 3 angles in radians: roll, yaw, pitch.
+/// Converts a quaternion to representation with 3 angles in radians: roll, yaw, pitch.
+/// @param q Quaternion to eb converted to vector.
+/// @return Vector which 3 components represent the given quaternion.
 vec3f_t quatf_to_eulers(quatf_t q);
 
-// Converts roll, yaw, pitch in radians to a quaternion.
+/// Converts roll, yaw, pitch in radians to a quaternion.
+/// @param euler_angles Vector of 3 components to be turned into quaternion.
+/// @return Quaternion equivalent to the given vector.
 quatf_t quatf_from_eulers(vec3f_t euler_angles);

@@ -14,9 +14,9 @@ typedef struct fs_t
 {
 	heap_t* heap;
 	queue_t* file_queue;
-	queue_t* compression_queue; //separate queue for compression and decompression
+	queue_t* compression_queue; //<separate queue for compression and decompression
 	thread_t* file_thread;
-	thread_t* compression_thread;//thread in order to call compression and decompression function
+	thread_t* compression_thread;//<thread in order to call compression and decompression function
 } fs_t;
 
 typedef enum fs_work_op_t
@@ -40,7 +40,7 @@ typedef struct fs_work_t
 
 static int file_thread_func(void* user);
 
-static int compression_thread_func(void* user);//function which operates on the compression thread
+static int compression_thread_func(void* user);//<function which operates on the compression thread
 
 fs_t* fs_create(heap_t* heap, int queue_capacity)
 {
@@ -49,7 +49,7 @@ fs_t* fs_create(heap_t* heap, int queue_capacity)
 	fs->file_queue = queue_create(heap, queue_capacity);
 	fs->compression_queue = queue_create(heap, queue_capacity);
 	fs->file_thread = thread_create(file_thread_func, fs);
-	fs->compression_thread = thread_create(compression_thread_func, fs);//create the thread calling the compression function
+	fs->compression_thread = thread_create(compression_thread_func, fs);//<create the thread calling the compression function
 	return fs;
 }
 
@@ -60,7 +60,7 @@ void fs_destroy(fs_t* fs)
 	thread_destroy(fs->file_thread);
 	thread_destroy(fs->compression_thread);
 	queue_destroy(fs->file_queue);
-	queue_destroy(fs->compression_queue);//make sure to properly destory new queue and thread
+	queue_destroy(fs->compression_queue);//<make sure to properly destory new queue and thread
 	heap_free(fs->heap, fs);
 }
 

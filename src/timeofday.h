@@ -1,10 +1,9 @@
 #pragma once
 
-// Date and time support.
 
 #include <stdint.h>
 
-// Defines a structure containing date and time information.
+/// Defines a structure containing date and time information.
 typedef struct time_date_time_t
 {
 	uint64_t seconds_since_epoch;
@@ -31,5 +30,5 @@ typedef struct time_date_time_t
 	};
 } time_date_time_t;
 
-// Get the current, local date and time.
+/// Get the current, local date and time.
 time_date_time_t timeofday_get();
